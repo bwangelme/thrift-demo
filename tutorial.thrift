@@ -113,6 +113,12 @@ struct Work {
   4: optional string comment,
 }
 
+struct GreetArg {
+  1: i32 num1,
+  2: string msg,
+  3: i32 num2,
+}
+
 /**
  * Structs can also be exceptions, if they are nasty.
  */
@@ -141,6 +147,8 @@ service Calculator extends shared.SharedService {
    i32 calculate(1:i32 logid, 2:Work w) throws (1:InvalidOperation ouch),
 
    Work wwork(1:i32 type) throws(1: InvalidOperation ouch),
+
+   void greet(1:GreetArg arg),
 
    /**
     * This method has a oneway modifier. That means the client only makes

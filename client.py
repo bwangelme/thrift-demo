@@ -1,5 +1,8 @@
+import sys
+sys.path.append('./genpy')
+
 from genpy.tutorial import Calculator
-from genpy.tutorial.ttypes import InvalidOperation, Operation, Work
+from genpy.tutorial.ttypes import InvalidOperation, Operation, Work, GreetArg
 
 from thrift import Thrift
 from thrift.transport import TSocket
@@ -47,31 +50,33 @@ def log(client):
 
 
 def wwork(client, type_):
-    client.wwork(type_)
+    try:
+        client.wwork(type_)
+    except InvalidOperation:
+        print("wwork exception")
+        return
+
+    print("wwork normal")
+
+
+def greet(client):
+    arg = GreetArg(num1=-1, num2=-2, msg="abc")
+    client.greet(arg)
 
 
 def main():
     # Make socket
     transport = TSocket.TSocket('localhost', 9090)
-
     # Buffering is critical. Raw sockets are very slow
     transport = TTransport.TFramedTransport(transport)
-
     # Wrap in a protocol
     protocol = TBinaryProtocol.TBinaryProtocol(transport)
-
     # Create a client to use the protocol encoder
     client = Calculator.Client(protocol)
-
     # Connect!
     transport.open()
 
-    wwork(client, 1)
-    print("wwork normal")
-    try:
-        wwork(client, -1)
-    except InvalidOperation:
-        print("wwork exception")
+    greet(client)
 
     # Close!
     transport.close()

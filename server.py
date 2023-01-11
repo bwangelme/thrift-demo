@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append('./genpy')
+
 from genpy.tutorial import Calculator
 from genpy.tutorial.ttypes import InvalidOperation, Operation, Work
 
@@ -53,6 +57,9 @@ class CalculatorHandler:
 
         work = Work(2, 3, Operation.MULTIPLY)
         return work
+
+    def greet(self, arg):
+        print(arg)
 
     def zip(self):
         print('zip()')
